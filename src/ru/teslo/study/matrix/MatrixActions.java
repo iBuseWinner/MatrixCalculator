@@ -88,18 +88,8 @@ public class MatrixActions {
             result = ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]));
         } else {
             for (int i = 0; i < matrix[0].length; i++) {
-                temporary = new int[matrix.length-1][matrix[0].length-1];
-                for (int j = 1; j < matrix.length; j++) {
-                    for (int k = 0; k < matrix[0].length; k++) {
-                        if (k < i) {
-                            temporary[j-1][k] = matrix[j][k];
-                        } else if (k > i) {
-                            temporary[j-1][k-1] = matrix[j][k];
-                        }
-                    }
-                }
-
-                result += matrix[0][1] * pow(-1, i) * determinant(temporary);
+                System.out.println(1*(int)pow(-1, i+1));
+                result += matrix[0][i] * complement(matrix, 0, i);
             }
         }
 
@@ -156,7 +146,7 @@ public class MatrixActions {
     }
 
     public static int complement(int[][] matrix, int i, int j){
-        return (int)pow(-1, i+j) * minor(matrix,i,j);
+        return (int)pow(-1, i+j+2) * minor(matrix, i, j);
     }
 
     public static int minor(int[][] matrix, int i, int j) {
@@ -183,15 +173,15 @@ public class MatrixActions {
     public static double[][] inverse(int[][] matrix) {
         double[][] result = new double[matrix.length][matrix[0].length];
         int determinant = determinant(matrix);
+        System.out.println(determinant);
         int[][] compMatrix = new int[matrix.length][matrix[0].length];
         int[][] tempMatrix = new int[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++){
             for (int j = 0; j < matrix[0].length; j++){
-                compMatrix[i][j] = complement(matrix, (int)i, (int)j);
+                compMatrix[i][j] = complement(matrix, i, j);
             }
         }
         tempMatrix = transposition(compMatrix);
-        System.out.println(determinant);
         result = multiplicationByNumber(tempMatrix, 1 / (double)determinant);
         return result;
     }

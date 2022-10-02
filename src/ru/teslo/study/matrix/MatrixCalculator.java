@@ -9,8 +9,7 @@ public class MatrixCalculator {
         double[][] result = MatrixActions.inverse(matrix);
         for (int i = 0; i < result.length; i++){
             for (int j = 0; j < result[0].length; j++){
-                System.out.print(result[i][j]);
-                System.out.print(" ");
+                System.out.print(result[i][j] + " ");
             }
             System.out.println();
         }
@@ -83,7 +82,7 @@ public class MatrixCalculator {
             switch (action) {
                 case RANG -> MatrixActions.rank(firstMatrix);
                 case INVERSE_MATRIX -> MatrixActions.inverse(firstMatrix);
-                case DETERMINANT -> System.out.println("Итог: "+MatrixActions.determinant(firstMatrix));
+                case DETERMINANT -> System.out.println("Итог: "+ MatrixActions.determinant(firstMatrix));
                 case TRANSPOSITION -> MatrixActions.transposition(firstMatrix);
             }
         } else if (action == Action.MULTIPLICATION_BY_NUMBER) {
