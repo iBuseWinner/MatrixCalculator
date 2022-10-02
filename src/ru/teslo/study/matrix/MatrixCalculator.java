@@ -1,18 +1,12 @@
 package ru.teslo.study.matrix;
 
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class MatrixCalculator {
 
     public static void main(String[] args) {
-        int[][] matrix = {{-1, 2, -2}, {2, -1, 5}, {3, -2, 4}};
-        double[][] result = MatrixActions.inverse(matrix);
-        for (int i = 0; i < result.length; i++){
-            for (int j = 0; j < result[0].length; j++){
-                System.out.print(result[i][j] + " ");
-            }
-            System.out.println();
-        }
+        runApp();
     }
 
     private static void runApp() {
@@ -41,7 +35,7 @@ public class MatrixCalculator {
                 case 4 -> action = Action.MULTIPLICATION;
                 case 5 -> action = Action.TRANSPOSITION;
                 case 6 -> action = Action.DETERMINANT;
-                case 7 -> action = Action.RANG;
+                case 7 -> action = Action.RANK;
                 case 8 -> action = Action.INVERSE_MATRIX;
             }
         } catch (NumberFormatException e) {
@@ -76,21 +70,21 @@ public class MatrixCalculator {
             System.out.println();
         }
 
-        if (action == Action.RANG || action == Action.INVERSE_MATRIX || action == Action.DETERMINANT
+        if (action == Action.RANK || action == Action.INVERSE_MATRIX || action == Action.DETERMINANT
                 || action == Action.TRANSPOSITION) {
             //1 матрица
             switch (action) {
-                case RANG -> MatrixActions.rank(firstMatrix);
-                case INVERSE_MATRIX -> MatrixActions.inverse(firstMatrix);
-                case DETERMINANT -> System.out.println("Итог: "+ MatrixActions.determinant(firstMatrix));
-                case TRANSPOSITION -> MatrixActions.transposition(firstMatrix);
+                case RANK -> System.out.println("Итог: " + MatrixActions.rank(firstMatrix));
+                case INVERSE_MATRIX -> print(MatrixActions.inverse(firstMatrix));
+                case DETERMINANT -> System.out.println("Итог: " + MatrixActions.determinant(firstMatrix));
+                case TRANSPOSITION -> print(MatrixActions.transposition(firstMatrix));
             }
         } else if (action == Action.MULTIPLICATION_BY_NUMBER) {
             //1 матрица и 1 число
             System.out.print("Теперь введите число, на которое надо умножить матрицу: ");
             int number = scanner.nextInt();
 
-            MatrixActions.multiplicationByNumber(firstMatrix, number);
+            print(MatrixActions.multiplicationByNumber(firstMatrix, number));
         } else {
             //2 матрицы
 
@@ -118,9 +112,9 @@ public class MatrixCalculator {
             }
 
             switch (action) {
-                case SUM -> MatrixActions.sum(firstMatrix, secondMatrix);
-                case SUBTRACTION -> MatrixActions.subtraction(firstMatrix, secondMatrix);
-                case MULTIPLICATION -> MatrixActions.multiplication(firstMatrix, secondMatrix);
+                case SUM -> print(MatrixActions.sum(firstMatrix, secondMatrix));
+                case SUBTRACTION -> print(MatrixActions.subtraction(firstMatrix, secondMatrix));
+                case MULTIPLICATION -> print(MatrixActions.multiplication(firstMatrix, secondMatrix));
             }
         }
 
@@ -133,6 +127,23 @@ public class MatrixCalculator {
         } else {
             System.out.println("Пока-пока!");
             System.exit(1);
+        }
+    }
+    public static void print(int[][] matrix) {
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++){
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    public static void print(double[][] matrix) {
+        DecimalFormat df = new DecimalFormat("#.#####");
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++){
+                System.out.print(df.format(matrix[i][j]) + " ");
+            }
+            System.out.println();
         }
     }
 
