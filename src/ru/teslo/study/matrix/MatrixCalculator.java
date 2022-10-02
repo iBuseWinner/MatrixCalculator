@@ -5,7 +5,15 @@ import java.util.Scanner;
 public class MatrixCalculator {
 
     public static void main(String[] args) {
-        runApp();
+        int[][] matrix = {{-1, 2, -2}, {2, -1, 5}, {3, -2, 4}};
+        double[][] result = MatrixActions.inverse(matrix);
+        for (int i = 0; i < result.length; i++){
+            for (int j = 0; j < result[0].length; j++){
+                System.out.print(result[i][j]);
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
     }
 
     private static void runApp() {
