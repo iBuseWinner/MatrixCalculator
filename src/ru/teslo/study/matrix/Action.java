@@ -7,6 +7,6 @@ public enum Action {
     MULTIPLICATION,
     TRANSPOSITION,
     DETERMINANT,
-    RANG,
+    RANK,
     INVERSE_MATRIX
 }

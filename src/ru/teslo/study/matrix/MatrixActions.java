@@ -1,8 +1,10 @@
 package ru.teslo.study.matrix;
 
+import static java.lang.Math.pow;
+
 public class MatrixActions {
 
-    public static void sum(int[][] firstMatrix, int[][] secondMatrix) {
+    public static int[][] sum(int[][] firstMatrix, int[][] secondMatrix) {
         int[][] resultMatrix = new int[firstMatrix.length][firstMatrix[0].length];
         for (int i = 0; i < firstMatrix.length; i++) {
             for (int j = 0; j < firstMatrix[i].length; j++) {
@@ -10,16 +12,10 @@ public class MatrixActions {
             }
         }
 
-        System.out.println("Итоговая матрица:");
-        for (int[] matrix : resultMatrix) {
-            for (int i : matrix) {
-                System.out.print(i + " ");
-            }
-            System.out.println();
-        }
+        return resultMatrix;
     }
 
-    public static void subtraction(int[][] firstMatrix, int[][] secondMatrix) {
+    public static int[][] subtraction(int[][] firstMatrix, int[][] secondMatrix) {
         int[][] resultMatrix = new int[firstMatrix.length][firstMatrix[0].length];
         for (int i = 0; i < firstMatrix.length; i++) {
             for (int j = 0; j < firstMatrix[i].length; j++) {
@@ -27,16 +23,10 @@ public class MatrixActions {
             }
         }
 
-        System.out.println("Итоговая матрица:");
-        for (int[] matrix : resultMatrix) {
-            for (int i : matrix) {
-                System.out.print(i + " ");
-            }
-            System.out.println();
-        }
+        return resultMatrix;
     }
 
-    public static void multiplicationByNumber(int[][] matrix, int number) {
+    public static int[][] multiplicationByNumber(int[][] matrix, int number) {
         int[][] resultMatrix = new int[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
@@ -44,16 +34,20 @@ public class MatrixActions {
             }
         }
 
-        System.out.println("Итоговая матрица:");
-        for (int[] resMatrix : resultMatrix) {
-            for (int i : resMatrix) {
-                System.out.print(i + " ");
+        return resultMatrix;
+    }
+    public static double[][] multiplicationByNumber(int[][] matrix, double number) {
+        double[][] resultMatrix = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                resultMatrix[i][j] = matrix[i][j] * number;
             }
-            System.out.println();
         }
+
+        return resultMatrix;
     }
 
-    public static void multiplication(int[][] firstMatrix, int[][] secondMatrix) {
+    public static int[][] multiplication(int[][] firstMatrix, int[][] secondMatrix) {
         int[][] resultMatrix = new int[firstMatrix.length][firstMatrix[0].length];
         for (int i = 0; i < firstMatrix.length; i++) {
             for (int j = 0; j < firstMatrix[i].length; j++) {
@@ -61,13 +55,7 @@ public class MatrixActions {
             }
         }
 
-        System.out.println("Итоговая матрица:");
-        for (int[] matrix : resultMatrix) {
-            for (int i : matrix) {
-                System.out.print(i + " ");
-            }
-            System.out.println();
-        }
+        return resultMatrix;
     }
 
     private static int multiplyMatricesCell(int[][] firstMatrix, int[][] secondMatrix, int i, int j) {
@@ -78,7 +66,7 @@ public class MatrixActions {
         return cell;
     }
 
-    public static void transposition(int[][] matrix) {
+    public static int[][] transposition(int[][] matrix) {
         int[][] resultMatrix = new int[matrix[0].length][matrix.length];
 
         for (int i = 0; i < matrix.length; i++) {
@@ -87,13 +75,7 @@ public class MatrixActions {
             }
         }
 
-        System.out.println("Итоговая матрица:");
-        for (int[] resMatrix : resultMatrix) {
-            for (int i : resMatrix) {
-                System.out.print(i + " ");
-            }
-            System.out.println();
-        }
+        return resultMatrix;
     }
 
     public static int determinant(int[][] matrix) {
@@ -106,35 +88,25 @@ public class MatrixActions {
             result = ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]));
         } else {
             for (int i = 0; i < matrix[0].length; i++) {
-                temporary = new int[matrix.length-1][matrix[0].length-1];
-                for (int j = 1; j < matrix.length; j++) {
-                    for (int k = 0; k < matrix[0].length; k++) {
-                        if (k < i) {
-                            temporary[j-1][k] = matrix[j][k];
-                        } else if (k > i) {
-                            temporary[j-1][k-1] = matrix[j][k];
-                        }
-                    }
-                }
-
-                result += matrix[0][1] * Math.pow(-1, i) * determinant(temporary);
+                System.out.println(1*(int)pow(-1, i+1));
+                result += matrix[0][i] * complement(matrix, 0, i);
             }
         }
 
         return result;
     }
 
-    public static void rank(int[][] matrix) {
+    public static int rank(int[][] matrix) {
         //А эта фигня неправильно считается, умничка какая
-        int rank = Math.min(matrix.length, matrix[0].length);
+        int _rank = Math.min(matrix.length, matrix[0].length);
         int[][] tempMatrix = new int[matrix.length][matrix[0].length];
 
-        for (int row = 0; row < rank; row++) {
+        for (int row = 0; row < _rank; row++) {
             if (tempMatrix[row][row] != 0) {
                 for (int col = 0; col < matrix.length; col++) {
                     if (col != row) {
                         int multi = tempMatrix[col][row] / tempMatrix[row][row];
-                        for (int i = 0; i < rank; i++) {
+                        for (int i = 0; i < _rank; i++) {
                             tempMatrix[col][i] -= multi * tempMatrix[row][i];
                         }
                     }
@@ -144,17 +116,17 @@ public class MatrixActions {
 
                 for (int i = row + 1; i < matrix.length; i++) {
                     if (tempMatrix[i][row] != 0) {
-                        swap(tempMatrix, row, i, rank);
+                        swap(tempMatrix, row, i, _rank);
                         reduce = false;
                         break;
                     }
                 }
 
                 if (reduce) {
-                    rank--;
+                    _rank--;
 
                     for (int i = 0; i < matrix.length; i++) {
-                        tempMatrix[i][row] = tempMatrix[i][rank];
+                        tempMatrix[i][row] = tempMatrix[i][_rank];
                     }
 
                     row--;
@@ -162,7 +134,7 @@ public class MatrixActions {
             }
         }
 
-        System.out.println("Итог: "+rank);
+        return _rank;
     }
     
     private static void swap(int[][] matrix, int row1, int row2, int column) {
@@ -173,9 +145,45 @@ public class MatrixActions {
         }
     }
 
-    public static void inverse(int[][] matrix) {
+    public static int complement(int[][] matrix, int i, int j){
+        return (int)pow(-1, i+j+2) * minor(matrix, i, j);
+    }
+
+    public static int minor(int[][] matrix, int i, int j) {
+        int result = 0;
+        int[][] tempMatrix = new int[matrix.length - 1][matrix[0].length - 1];
+        int flagRow = 0;
+        int flagColumn = 0;
+        for (int k = 0; k < tempMatrix.length; k++){
+            flagColumn = 0;
+            for (int l = 0; l < tempMatrix.length; l++) {
+                if (l==j) {
+                    flagColumn = 1;
+                }
+                if(k == i){
+                    flagRow = 1;
+                }
+                tempMatrix[k][l] = matrix[k+flagRow][l+flagColumn];
+            }
+        }
+        result = determinant(tempMatrix);
+        return result;
+    }
+
+    public static double[][] inverse(int[][] matrix) {
+        double[][] result = new double[matrix.length][matrix[0].length];
         int determinant = determinant(matrix);
-        //Тут были попытки сделать инверсию. К сожалению, они не увенчались успехом.
+        System.out.println(determinant);
+        int[][] compMatrix = new int[matrix.length][matrix[0].length];
+        int[][] tempMatrix = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++){
+                compMatrix[i][j] = complement(matrix, i, j);
+            }
+        }
+        tempMatrix = transposition(compMatrix);
+        result = multiplicationByNumber(tempMatrix, 1 / (double)determinant);
+        return result;
     }
 
 }
