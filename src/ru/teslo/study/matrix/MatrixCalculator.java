@@ -1,16 +1,20 @@
 package ru.teslo.study.matrix;
 
+import ru.teslo.study.matrix.object.Matrix;
+
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class MatrixCalculator {
 
+    private static final DecimalFormat decimalFormat = new DecimalFormat("#.#####");
+
     public static void main(String[] args) {
-        runApp();
+        Scanner scanner = new Scanner(System.in);
+        runApp(scanner);
     }
 
-    private static void runApp() {
-        Scanner scanner = new Scanner(System.in);
+    private static void runApp(Scanner scanner) {
         System.out.println("Доступные действия для матриц(ы):");
         System.out.println();
         System.out.println("1) Сумма матриц");
@@ -50,35 +54,32 @@ public class MatrixCalculator {
         System.out.print("Введите количество столбцов первой матрицы: ");
         int firstMatrixColumns = scanner.nextInt();
 
-        int[][] firstMatrix = new int[firstMatrixLines][firstMatrixColumns];
+        Matrix firstMatrix = new Matrix(firstMatrixLines, firstMatrixColumns);
         System.out.println();
         System.out.println("Введите элементы первой матрицы по порядку.");
-        for (int i = 0; i < firstMatrix.length; i++) {
-            for (int j = 0; j < firstMatrix[i].length; j++) {
+        for (int i = 0; i < firstMatrix.lines(); i++) {
+            for (int j = 0; j < firstMatrix.columns(); j++) {
                 System.out.print((i+1)+";"+(j+1)+": ");
-                firstMatrix[i][j] = scanner.nextInt();
+                firstMatrix.setCell(scanner.nextInt(), i, j);
             }
         }
 
         System.out.println();
 
         System.out.println("Итоговая первая матрица:");
-        for (int[] matrix : firstMatrix) {
-            for (int i : matrix) {
-                System.out.print(i + " ");
-            }
-            System.out.println();
-        }
+        printMatrix(firstMatrix);
 
         if (action == Action.RANK || action == Action.INVERSE_MATRIX || action == Action.DETERMINANT
                 || action == Action.TRANSPOSITION) {
             //1 матрица
             try {
+                System.out.println();
+                System.out.println("Итог: ");
                 switch (action) {
-                    case RANK -> System.out.println("Итог: " + MatrixActions.rank(firstMatrix));
-                    case INVERSE_MATRIX -> print(MatrixActions.inverse(firstMatrix));
-                    case DETERMINANT -> System.out.println("Итог: " + MatrixActions.determinant(firstMatrix));
-                    case TRANSPOSITION -> print(MatrixActions.transposition(firstMatrix));
+                    case RANK -> System.out.println(firstMatrix.rank());
+                    case INVERSE_MATRIX -> printMatrix(firstMatrix.inverse());
+                    case DETERMINANT -> System.out.println(firstMatrix.determinant());
+                    case TRANSPOSITION -> printMatrix(firstMatrix.transposition());
                 }
             }
             catch (ArithmeticException e) {
@@ -89,7 +90,9 @@ public class MatrixCalculator {
             System.out.print("Теперь введите число, на которое надо умножить матрицу: ");
             int number = scanner.nextInt();
 
-            print(MatrixActions.multiplicationByNumber(firstMatrix, number));
+            System.out.println();
+            System.out.println("Итог: ");
+            printMatrix(firstMatrix.multi(number));
         } else {
             //2 матрицы
 
@@ -98,55 +101,45 @@ public class MatrixCalculator {
             System.out.print("Введите количество столбцов второй матрицы: ");
             int secondMatrixColumns = scanner.nextInt();
 
-            int[][] secondMatrix = new int[secondMatrixLines][secondMatrixColumns];
+            Matrix secondMatrix = new Matrix(secondMatrixLines, secondMatrixColumns);
 
             System.out.println("Введите элементы второй матрицы по порядку.");
-            for (int i = 0; i < secondMatrix.length; i++) {
-                for (int j = 0; j < secondMatrix[i].length; j++) {
+            for (int i = 0; i < secondMatrix.lines(); i++) {
+                for (int j = 0; j < secondMatrix.columns(); j++) {
                     System.out.print((i+1)+";"+(j+1)+": ");
-                    secondMatrix[i][j] = scanner.nextInt();
+                    secondMatrix.setCell(scanner.nextInt(), i, j);
                 }
             }
+
+            System.out.println();
 
             System.out.println("Итоговая вторая матрица:");
-            for (int[] matrix : secondMatrix) {
-                for (int i : matrix) {
-                    System.out.print(i + " ");
-                }
-                System.out.println();
-            }
+            printMatrix(secondMatrix);
+            System.out.println();
 
+            System.out.println("Итог: ");
             switch (action) {
-                case SUM -> print(MatrixActions.sum(firstMatrix, secondMatrix));
-                case SUBTRACTION -> print(MatrixActions.subtraction(firstMatrix, secondMatrix));
-                case MULTIPLICATION -> print(MatrixActions.multiplication(firstMatrix, secondMatrix));
+                case SUM -> printMatrix(firstMatrix.sum(secondMatrix));
+                case SUBTRACTION -> printMatrix(firstMatrix.sub(secondMatrix));
+                case MULTIPLICATION -> printMatrix(firstMatrix.multi(secondMatrix));
             }
         }
 
         System.out.print("Использовать калькулятор ещё раз? ");
         String answer = scanner.next();
-        scanner.close();
-        if (answer.equalsIgnoreCase("да") || answer.equalsIgnoreCase("true") || answer.equals("+") || answer.equals("1") || answer.equalsIgnoreCase("yes")) {
-            //Исправить ошибку
-            runApp();
+        if (answer.equalsIgnoreCase("да") || answer.equalsIgnoreCase("true") || answer.equals("+") ||
+                answer.equals("1") || answer.equalsIgnoreCase("yes")) {
+            runApp(scanner);
         } else {
             System.out.println("Пока-пока!");
             System.exit(1);
         }
     }
-    public static void print(int[][] matrix) {
-        for (int i = 0; i < matrix.length; i++){
-            for (int j = 0; j < matrix[0].length; j++){
-                System.out.print(matrix[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-    public static void print(double[][] matrix) {
-        DecimalFormat df = new DecimalFormat("#.#####");
-        for (int i = 0; i < matrix.length; i++){
-            for (int j = 0; j < matrix[0].length; j++){
-                System.out.print(df.format(matrix[i][j]) + " ");
+
+    public static void printMatrix(Matrix matrix) {
+        for (double[] doubles : matrix.getSimpleMatrix()) {
+            for (double i : doubles) {
+                System.out.print(decimalFormat.format(i) + " ");
             }
             System.out.println();
         }
