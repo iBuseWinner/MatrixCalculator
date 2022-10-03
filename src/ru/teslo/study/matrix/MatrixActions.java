@@ -11,7 +11,6 @@ public class MatrixActions {
                 resultMatrix[i][j] = firstMatrix[i][j] + secondMatrix[i][j];
             }
         }
-
         return resultMatrix;
     }
 
@@ -22,7 +21,6 @@ public class MatrixActions {
                 resultMatrix[i][j] = firstMatrix[i][j] - secondMatrix[i][j];
             }
         }
-
         return resultMatrix;
     }
 
@@ -33,7 +31,6 @@ public class MatrixActions {
                 resultMatrix[i][j] = matrix[i][j] * number;
             }
         }
-
         return resultMatrix;
     }
     public static double[][] multiplicationByNumber(int[][] matrix, double number) {
@@ -43,7 +40,6 @@ public class MatrixActions {
                 resultMatrix[i][j] = matrix[i][j] * number;
             }
         }
-
         return resultMatrix;
     }
 
@@ -54,7 +50,6 @@ public class MatrixActions {
                 resultMatrix[i][j] = multiplyMatricesCell(firstMatrix, secondMatrix, i, j);
             }
         }
-
         return resultMatrix;
     }
 
@@ -68,39 +63,35 @@ public class MatrixActions {
 
     public static int[][] transposition(int[][] matrix) {
         int[][] resultMatrix = new int[matrix[0].length][matrix.length];
-
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 resultMatrix[j][i] = matrix[i][j];
             }
         }
-
         return resultMatrix;
     }
 
     public static int determinant(int[][] matrix) {
+        if (matrix.length != matrix[0].length) {
+            throw new ArithmeticException("Not a square matrix");
+        }
         int result = 0;
         int[][] temporary;
-        
         if (matrix.length == 1) {
             result = matrix[0][0];
         } else if (matrix.length == 2) {
             result = ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]));
         } else {
             for (int i = 0; i < matrix[0].length; i++) {
-                System.out.println(1*(int)pow(-1, i+1));
                 result += matrix[0][i] * complement(matrix, 0, i);
             }
         }
-
         return result;
     }
 
     public static int rank(int[][] matrix) {
-        //А эта фигня неправильно считается, умничка какая
-        int _rank = Math.min(matrix.length, matrix[0].length);
-        int[][] tempMatrix = new int[matrix.length][matrix[0].length];
-
+        int _rank = matrix[0].length;
+        int[][] tempMatrix = matrix;
         for (int row = 0; row < _rank; row++) {
             if (tempMatrix[row][row] != 0) {
                 for (int col = 0; col < matrix.length; col++) {
@@ -113,7 +104,6 @@ public class MatrixActions {
                 }
             } else {
                 boolean reduce = true;
-
                 for (int i = row + 1; i < matrix.length; i++) {
                     if (tempMatrix[i][row] != 0) {
                         swap(tempMatrix, row, i, _rank);
@@ -121,23 +111,19 @@ public class MatrixActions {
                         break;
                     }
                 }
-
                 if (reduce) {
                     _rank--;
-
                     for (int i = 0; i < matrix.length; i++) {
                         tempMatrix[i][row] = tempMatrix[i][_rank];
                     }
-
                     row--;
                 }
             }
         }
-
         return _rank;
     }
     
-    private static void swap(int[][] matrix, int row1, int row2, int column) {
+    public static void swap(int[][] matrix, int row1, int row2, int column) {
         for (int i = 0; i < column; i++) {
             int temp = matrix[row1][i];
             matrix[row1][i] = matrix[row2][i];
@@ -171,19 +157,24 @@ public class MatrixActions {
     }
 
     public static double[][] inverse(int[][] matrix) {
-        double[][] result = new double[matrix.length][matrix[0].length];
+
         int determinant = determinant(matrix);
-        System.out.println(determinant);
+        if (determinant == 0) {
+            throw new ArithmeticException("Determinant can't be 0");
+        }
+        if (matrix.length != matrix[0].length){
+            throw new ArithmeticException("Not a square matrix");
+        }
+        double[][] result = new double[matrix.length][matrix[0].length];
         int[][] compMatrix = new int[matrix.length][matrix[0].length];
         int[][] tempMatrix = new int[matrix.length][matrix[0].length];
-        for (int i = 0; i < matrix.length; i++){
-            for (int j = 0; j < matrix[0].length; j++){
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
                 compMatrix[i][j] = complement(matrix, i, j);
             }
         }
         tempMatrix = transposition(compMatrix);
-        result = multiplicationByNumber(tempMatrix, 1 / (double)determinant);
+        result = multiplicationByNumber(tempMatrix, 1 / (double) determinant);
         return result;
     }
-
 }
