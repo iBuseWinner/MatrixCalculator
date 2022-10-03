@@ -73,11 +73,16 @@ public class MatrixCalculator {
         if (action == Action.RANK || action == Action.INVERSE_MATRIX || action == Action.DETERMINANT
                 || action == Action.TRANSPOSITION) {
             //1 матрица
-            switch (action) {
-                case RANK -> System.out.println("Итог: " + MatrixActions.rank(firstMatrix));
-                case INVERSE_MATRIX -> print(MatrixActions.inverse(firstMatrix));
-                case DETERMINANT -> System.out.println("Итог: " + MatrixActions.determinant(firstMatrix));
-                case TRANSPOSITION -> print(MatrixActions.transposition(firstMatrix));
+            try {
+                switch (action) {
+                    case RANK -> System.out.println("Итог: " + MatrixActions.rank(firstMatrix));
+                    case INVERSE_MATRIX -> print(MatrixActions.inverse(firstMatrix));
+                    case DETERMINANT -> System.out.println("Итог: " + MatrixActions.determinant(firstMatrix));
+                    case TRANSPOSITION -> print(MatrixActions.transposition(firstMatrix));
+                }
+            }
+            catch (ArithmeticException e) {
+                System.out.println(e.getMessage());
             }
         } else if (action == Action.MULTIPLICATION_BY_NUMBER) {
             //1 матрица и 1 число
